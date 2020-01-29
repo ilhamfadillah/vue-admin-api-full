@@ -49,14 +49,9 @@ const UserService = {
 
         const requestData = {
             method: 'post',
-            url: "/o/token/",
-            data: {
-                grant_type: 'refresh_token',
-                refresh_token: refreshToken
-            },
-            auth: {
-                username: process.env.VUE_APP_CLIENT_ID,
-                password: process.env.VUE_APP_CLIENT_SECRET
+            url: "/users/refresh",
+            headers : {
+                Authorization : "Bearer " + refreshToken
             }
         }
 

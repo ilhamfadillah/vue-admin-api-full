@@ -84,7 +84,6 @@ router.beforeEach((to, from, next) => {
   const loggedIn = !!TokenService.getToken();
   
   if (!isPublic && !loggedIn) {
-    console.log('first')
     next({
       path:'/login',
       query: {redirect: to.fullPath}  // Store the full path to redirect the user to after login
@@ -92,10 +91,9 @@ router.beforeEach((to, from, next) => {
   } 
   
   if (loggedIn && onlyWhenLoggedOut) {
-    console.log('second')
     next({ path: '/admin/coindesk' })
   } 
-  console.log('third')
+  
   next();
 })
 

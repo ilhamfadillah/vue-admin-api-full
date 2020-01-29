@@ -7,6 +7,13 @@
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
+        <li class="nav-item">
+          <button 
+            class="btn btn-primary"
+            v-on:click='refreshToken'>
+            Refresh Token
+          </button>
+        </li>
       </ul>
 
       <!-- Right navbar links -->
@@ -27,6 +34,9 @@
     methods: {
       logout: function() {
         this.$store.dispatch('logout')
+      },
+      refreshToken() {
+        this.$store.dispatch('refreshToken')
       } 
     }
   }

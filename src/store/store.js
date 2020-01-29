@@ -15,6 +15,7 @@ const state = {
     loginStatus: false,
     loginData: null,
     coindesk: null,
+    refreshTokenPromise: null
 }
 
 const actions = {
@@ -43,16 +44,25 @@ const actions = {
         router.push('/login')
     },
 
-    refreshToken(context) {
-        axios.get('http://localhost:5000/users/refresh', {
-            headers : {
-                Authorization : "Bearer " + state.loginData['refresh_token']
-            }
-        }).then(response => {
-            console.log(response)
-        }).catch(function (error) {
-            console.log(error)
-        })
+    refreshToken({ commit, state }) {
+        if(!state.refreshTokenPromise) {
+            const p = UserService.refreshToken()
+            commit('refreshTokenPromise', p)
+
+            // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
+            // Clear the promise on error as well.
+            p.then(
+                response => {
+                    commit('refreshTokenPromise', null)
+                    commit('loginSuccess', response)
+                },
+                error => {
+                    commit('refreshTokenPromise', null)
+                }
+            )
+        }
+
+        return state.refreshTokenPromise
     },
 
     getCoindesk(context) {
@@ -86,6 +96,10 @@ const mutations = {
     },
     logoutSuccess(state) {
         state.accessToken = ''
+    },
+    refreshTokenPromise(state, promise) {
+        console.log(promise)
+        state.refreshTokenPromise = promise
     }
 }
 
