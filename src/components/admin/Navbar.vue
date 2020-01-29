@@ -35,8 +35,8 @@
       logout: function() {
         this.$store.dispatch('logout')
       },
-      refreshToken() {
-        this.$store.dispatch('refreshToken')
+      async refreshToken() {
+        await this.$store.dispatch('refreshToken')
       } 
     }
   }

@@ -44,22 +44,24 @@ const actions = {
         router.push('/login')
     },
 
-    refreshToken({ commit, state }) {
+    refreshToken({ commit, state, dispatch }) {
         if(!state.refreshTokenPromise) {
             const p = UserService.refreshToken()
             commit('refreshTokenPromise', p)
 
             // Wait for the UserService.refreshToken() to resolve. On success set the token and clear promise
             // Clear the promise on error as well.
-            p.then(
-                response => {
+            p.then(response => {
+                    if(response.status == 401) {
+                        commit('refreshTokenPromise', null)
+                        dispatch('logout')    
+                    }
+                    console.log(response)
                     commit('refreshTokenPromise', null)
                     commit('loginSuccess', response)
-                },
-                error => {
+            }).catch((error) => {
                     commit('refreshTokenPromise', null)
-                }
-            )
+            })
         }
 
         return state.refreshTokenPromise
@@ -73,7 +75,7 @@ const actions = {
         }).then(response => {
             console.log(response)
         }).catch(function (error) {
-            console.log(error)
+            console.log("This is ERROR" + error)
         })
     }
 }
@@ -98,7 +100,6 @@ const mutations = {
         state.accessToken = ''
     },
     refreshTokenPromise(state, promise) {
-        console.log(promise)
         state.refreshTokenPromise = promise
     }
 }

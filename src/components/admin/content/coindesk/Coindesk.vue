@@ -141,6 +141,8 @@
     },
     methods: {
       getCurrencies: function() {
+        const vm = this
+
         this.$http.get('http://localhost:5000/currencies/?base='+this.base.toUpperCase()).then(response => {
         this.currencyRates = response.data.rates
         this.currencyBase = response.data['base']
@@ -149,7 +151,9 @@
           this.currencyError = response.data['error']
         }
         }).catch(function (error) {
-          console.log(error);
+          if(error.response.status == 401) {
+            vm.$store.dispatch('refreshToken')
+          }
         })
       }
     }

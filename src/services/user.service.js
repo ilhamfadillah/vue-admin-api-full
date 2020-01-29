@@ -57,7 +57,6 @@ const UserService = {
 
         try {
             const response = await ApiService.customRequest(requestData)
-
             TokenService.saveToken(response.data.access_token)
             TokenService.saveRefreshToken(response.data.refresh_token)
             // Update the header in ApiService
@@ -65,7 +64,7 @@ const UserService = {
 
             return response.data.access_token
         } catch (error) {
-            throw new AuthenticationError(error.response.status, error.response.data.detail)
+            return error.response
         }
 
     },
